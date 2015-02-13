@@ -5,9 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="623a4496e2e14230b2293333e2cc8792" Name="Diagram1" ShowGrid="true" >
-        <EntityTypeShape EntityType="DataModel.Sitter" Width="1.5" PointX="2" PointY="3.125" />
-        <EntityTypeShape EntityType="DataModel.Service" Width="1.5" PointX="5" PointY="3.125" />
-        <EntityTypeShape EntityType="DataModel.Image" Width="1.5" PointX="7.875" PointY="3.375" />
+        <EntityTypeShape EntityType="DataModel.Sitter" Width="1.5" PointX="1.25" PointY="3.375" />
+        <EntityTypeShape EntityType="DataModel.Service" Width="1.5" PointX="4.25" PointY="3.375" />
+        <EntityTypeShape EntityType="DataModel.Image" Width="1.5" PointX="7.125" PointY="3.625" />
         <AssociationConnector Association="DataModel.SitterService" />
         <AssociationConnector Association="DataModel.ServiceImage" />
       </Diagram>
