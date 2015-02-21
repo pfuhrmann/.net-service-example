@@ -20,12 +20,11 @@ namespace DataModel
         }
     
         public int Id { get; set; }
-        public string Postcode { get; set; }
         public string Type { get; set; }
         public string Location { get; set; }
         public string Availability { get; set; }
         public string Description { get; set; }
-        public string Charges { get; set; }
+        public decimal Charges { get; set; }
     
         public virtual Sitter Sitter { get; set; }
         public virtual ICollection<Image> Images { get; set; }
