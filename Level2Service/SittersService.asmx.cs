@@ -23,7 +23,7 @@ namespace Level2Service
         }
 
         [WebMethod]
-        public XmlDocument Sitters(string type, string sort, string limit, string page)
+        public XmlDocument Sitters(string type)
         {
             XDocument doc;
 
@@ -39,57 +39,29 @@ namespace Level2Service
                     ).AsEnumerable();
                 }
 
-                // Sort filtering
-                switch (sort)
-                {
-                    case "priceasc":
-                        services = services.OrderBy(s => s.Charges);
-                        break;
-                    case "pricedesc":
-                        services = services.OrderByDescending(s => s.Charges);
-                        break;
-                    case "location":
-                        services = services.OrderBy(s => s.Location);
-                        break;
-                    default:
-                        services = services.OrderBy(s => s.Charges);
-                        break;
-                }
-
-                // Pagination
-                var pageParsed = 1;
-                if (!String.IsNullOrEmpty(page))
-                {
-                    pageParsed = Convert.ToInt32(page);
-                }
-
-                if (!String.IsNullOrEmpty(limit))
-                {
-                    int limitParsed = Convert.ToInt32(limit);
-                    services = services.Skip(limitParsed * (pageParsed - 1)).Take(limitParsed);
-                }
-
                 doc = new XDocument(
                     CreateDeclaration(),
                     new XElement("sitters",
                       from service in services select 
                         new XElement("sitter",
-                            new XAttribute("id", service.Sitter.Id),
+                            new XAttribute("id", service.Id),
+                            new XAttribute("service", "lewisham"),
                             new XElement("name",
                                 new XElement("firstname", service.Sitter.FirstName),
                                 new XElement("lastname", service.Sitter.LastName)
                             ),
                             new XElement("service",
-                                    new XElement("type", service.Type),
-                                    new XElement("charges", service.Charges),
-                                    new XElement("location", service.Location)
-                                )
+                                new XElement("type", service.Type),
+                                new XElement("charges", service.Charges),
+                                new XElement("location", service.Location)
                             )
                         )
-                    );
+                    )
+                );
             }
             catch (Exception e)
             {
+                throw;
                 if (e is FormatException)
                 {
                     doc = CreateErrorDocument("sitter", "Limit and page parameters must be numeric");
@@ -110,33 +82,29 @@ namespace Level2Service
 
             try
             {
-                var sitter = _context.Sitters.Find(Convert.ToInt32(id));
+                var sitter = _context.Services.Find(Convert.ToInt32(id));
 
                 doc = new XDocument(
                     CreateDeclaration(),
                     new XElement("sitter_detail",
-                        new XAttribute("id", sitter.Id),
+                        new XAttribute("id", id),
                         new XElement("name",
-                            new XElement("firstname", sitter.FirstName),
-                            new XElement("lastname", sitter.LastName)
+                            new XElement("firstname", sitter.Sitter.FirstName),
+                            new XElement("lastname", sitter.Sitter.LastName)
                         ),
-                        new XElement("email", sitter.Email),
-                        new XElement("phone", sitter.Phone),
-                        new XElement("services",
-                        from service in sitter.Services
-                        select
-                            new XElement("service",
-                                new XElement("type", service.Type),
-                                new XElement("location", service.Location),
-                                new XElement("availability", service.Availability),
-                                new XElement("description", service.Description),
-                                new XElement("charges", service.Charges),
-                                new XElement("images",
-                                from image in service.Images
-                                select
-                                    new XElement("image",
-                                        new XElement("image_url", image.code)
-                                    )
+                        new XElement("email", sitter.Sitter.Email),
+                        new XElement("phone", sitter.Sitter.Phone),
+                        new XElement("service",
+                            new XElement("type", sitter.Type),
+                            new XElement("location", sitter.Location),
+                            new XElement("availability", sitter.Availability),
+                            new XElement("description", sitter.Description),
+                            new XElement("charges", sitter.Charges),
+                            new XElement("images",
+                            from image in sitter.Images
+                            select
+                                new XElement("image",
+                                    new XElement("image_url", image.code)
                                 )
                             )
                         )
