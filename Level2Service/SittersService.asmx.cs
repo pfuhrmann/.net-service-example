@@ -61,7 +61,6 @@ namespace Level2Service
             }
             catch (Exception e)
             {
-                throw;
                 if (e is FormatException)
                 {
                     doc = CreateErrorDocument("sitter", "Limit and page parameters must be numeric");
