@@ -23,7 +23,7 @@ namespace Level2Service
         }
 
         [WebMethod]
-        public XmlDocument Sitters(string type)
+        public XmlDocument Sitters(string type, string limit, string page)
         {
             XDocument doc;
 
@@ -37,6 +37,19 @@ namespace Level2Service
                     services = services.Where(
                         s => s.Type.Contains(type)
                     ).AsEnumerable();
+                }
+
+                if (!String.IsNullOrEmpty(limit))
+                {
+                    int limitInt = Int32.Parse(limit);
+
+                    int pageInt = 1;
+                    if (!String.IsNullOrEmpty(page))
+                    {
+                        pageInt = Int32.Parse(page);
+                    }
+
+                    services = services.Skip((pageInt - 1) * limitInt).Take(limitInt).AsEnumerable();
                 }
 
                 doc = new XDocument(
